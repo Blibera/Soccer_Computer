@@ -1,6 +1,5 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import urllib.request
 import requests
 import pymysql
 import time
@@ -94,13 +93,12 @@ def day_set(text):
     day = year+month+day
     return day
 
-for k in range(0,10):
+for k in range(8,10):
     driver = webdriver.Chrome('C:/chromedriver')
     driver.get(url[k])
     Select_name = name[k]
 
     for j in range(0,8):
-        time.sleep(5)
 
         html = driver.page_source
         soup = BeautifulSoup(html, 'lxml')
@@ -236,9 +234,9 @@ for k in range(0,10):
                         Home_play_2 = Away_play2
                         Home_play_Score = Away_playScore
 
-                    if Home_play_Score>Ememy_Score:
+                    if Home_play_Score > Ememy_Score:
                         result = 2
-                    elif Home_play_Score<Ememy_Score:
+                    elif Home_play_Score < Ememy_Score:
                         result = 0
                     else:
                         result = 1
@@ -325,30 +323,32 @@ for k in range(0,10):
                     Share_Home = int(Share_Home)
                     Share_Away = int(Share_Away)
 
-
-                    if home==1:
-                        sql = "INSERT INTO Soccer (Team, Result, Not_Epl, day, Enemy_name, Home_Play_1,Home_Play_2," \
-                              "Home_Play_Score,Enemy_1,Enemy_2,Enemy_Score,Home_Play_Corner_me, Home_Play_Shot_me,"\
-                                " Home_Play_Shot_Target_me,Home_Foul_me, Home_Play_Share,Away_Play_Corner_me, Away_Play_Shot_me,"\
-                                "Away_Play_Shot_Target_me, Away_Foul_me,Home_Offside_me,Away_Offside_me) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                        curs.execute(sql, (str(Team),int(result),int(not_epl),str(day),str(emeny_name),int(Home_play_1),int(Home_play_2),int(Home_play_Score),
-                                           int(Ememy_1),int(Ememy_2),int(Ememy_Score),int(Home_Play_Corner_me),int(Home_Play_Shot_me),int(Home_Play_Shot_Target_me),
-                                           int(Home_Foul_me),int(Share_Home),int(Share_Away),int(Home_Play_Corner_you),int(Home_Play_Shot_you),int(Home_Play_Shot_Target_you)
-                                           , int(Home_Foul_you), int(Home_Offside_me), int(Home_Offside_you)))
-                    else:
-                        sql = "INSERT INTO Soccer (Team, Result, Not_Epl, day, Enemy_name, Home_Play_1,Home_Play_2," \
+                    if home == 1:
+                        sql = "INSERT INTO Soccer (Team, Home, Result, Not_Epl, Enemy_name, Home_Play_1,Home_Play_2," \
                               "Home_Play_Score,Enemy_1,Enemy_2,Enemy_Score,Home_Play_Corner_me, Home_Play_Shot_me," \
-                              " Home_Play_Shot_Target_me,Home_Foul_me, Home_Play_Share,Away_Play_Corner_me, Away_Play_Shot_me," \
-                              "Away_Play_Shot_Target_me, Away_Foul_me,Home_Offside_me,Away_Offside_me) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                              " Home_Play_Shot_Target_me,Home_Foul_me, Home_Play_Share,Away_Play_Share,Away_Play_Corner_me, Away_Play_Shot_me," \
+                              "Away_Play_Shot_Target_me, Away_Foul_me,Home_Offside_me,Away_Offside_me, day) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                         curs.execute(sql, (
-                            str(Team), int(result), int(not_epl), str(day), str(emeny_name),
+                        str(Team), int(0), int(result), int(not_epl), str(emeny_name), int(Home_play_1), int(Home_play_2),
+                        int(Home_play_Score),
+                        int(Ememy_1), int(Ememy_2), int(Ememy_Score), int(Home_Play_Corner_me), int(Home_Play_Shot_me),
+                        int(Home_Play_Shot_Target_me),
+                        int(Home_Foul_me), int(Share_Home), int(Share_Away), int(Home_Play_Corner_you),
+                        int(Home_Play_Shot_you), int(Home_Play_Shot_Target_you)
+                        , int(Home_Foul_you), int(Home_Offside_me), int(Home_Offside_you), str(day)))
+                    else:
+                        sql = "INSERT INTO Soccer (Team, Home, Result, Not_Epl, Enemy_name, Home_Play_1,Home_Play_2," \
+                              "Home_Play_Score,Enemy_1,Enemy_2,Enemy_Score,Home_Play_Corner_me, Home_Play_Shot_me," \
+                              " Home_Play_Shot_Target_me,Home_Foul_me, Home_Play_Share,Away_Play_Share,Away_Play_Corner_me, Away_Play_Shot_me," \
+                              "Away_Play_Shot_Target_me, Away_Foul_me,Home_Offside_me,Away_Offside_me, day) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        curs.execute(sql, (
+                            str(Team), int(1), int(result), int(not_epl), str(emeny_name),
                             int(Ememy_1), int(Ememy_2), int(Ememy_Score),
                             int(Home_play_1), int(Home_play_2), int(Home_play_Score), int(Home_Play_Corner_you),
                             int(Home_Play_Shot_you), int(Home_Play_Shot_Target_you),
                             int(Home_Foul_you), int(Share_Away), int(Share_Home), int(Home_Play_Corner_me),
                             int(Home_Play_Shot_me), int(Home_Play_Shot_Target_me)
-                            , int(Home_Foul_me), int(Home_Offside_you), int(Home_Offside_me)))
-
+                            , int(Home_Foul_me), int(Home_Offside_you), int(Home_Offside_me), str(day)))
 
                         conn.commit()
 
@@ -357,5 +357,4 @@ for k in range(0,10):
 
         driver.find_element_by_id('page_team_1_block_team_matches_3_previous').click()
         time.sleep(10)
-
-
+    driver.quit()
