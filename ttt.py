@@ -17,13 +17,13 @@ user_agent = "'Mozilla/5.0"
 headers = {"User-Agent": user_agent}
 
 # url
-url = ['https://us.soccerway.com/teams/england/huddersfield-town-fc/726/matches/','https://us.soccerway.com/teams/england/brighton--hove-albion-fc/703/matches/',\
-       'https://us.soccerway.com/teams/england/stoke-city-fc/690/matches/','https://us.soccerway.com/teams/england/southampton-fc/670/matches/', \
-       'https://us.soccerway.com/teams/wales/swansea-city-afc/738/matches/', 'https://us.soccerway.com/teams/england/crystal-palace-fc/679/matches/', \
-       'https://us.soccerway.com/teams/england/afc-bournemouth/711/matches/', 'https://us.soccerway.com/teams/england/everton-football-club/674/matches/', \
-       'https://us.soccerway.com/teams/england/watford-football-club/696/matches/', 'https://us.soccerway.com/teams/england/west-bromwich-albion-football-club/678/matches/']
-name = ['Huddersfield Town','Brighton & Hove Albion','Stoke City','Southampton','Swansea City', \
-        'Crystal Palace', 'AFC Bournemouth','West Ham United','Watford','West Bromwich Albion']
+url = ['https://us.soccerway.com/teams/england/manchester-city-football-club/676/matches/','https://us.soccerway.com/teams/england/manchester-united-fc/662/matches/',\
+       'https://us.soccerway.com/teams/england/tottenham-hotspur-football-club/675/matches/','https://us.soccerway.com/teams/england/liverpool-fc/663/matches/', \
+       'https://us.soccerway.com/teams/england/chelsea-football-club/661/matches/', 'https://us.soccerway.com/teams/england/arsenal-fc/660/matches/', \
+       'https://us.soccerway.com/teams/england/burnley-fc/698/matches/', 'https://us.soccerway.com/teams/england/everton-football-club/674/matches/', \
+       'https://us.soccerway.com/teams/england/leicester-city-fc/682/matches/', 'https://us.soccerway.com/teams/england/newcastle-united-football-club/664/matches/']
+name = ['Manchester City','Manchester United','Tottenham Hotspur','Liverpool','Chelsea', \
+        'Arsenal', 'Burnley','Everton','Leicester City','Newcastle United']
 
 # 페이지 넘김
 
@@ -94,7 +94,7 @@ def day_set(text):
     day = year+month+day
     return day
 
-for k in range(8,10):
+for k in range(9,10):
     driver = webdriver.Chrome('C:/chromedriver')
     driver.get(url[k])
     Select_name = name[k]
