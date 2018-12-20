@@ -1,33 +1,69 @@
-import pymysql
+import tensorflow as tf
+tf.set_random_seed(777)  # for reproducibility
+
+x_data = [[1, 2, 1, 1],
+          [2, 1, 3, 2],
+          [3, 1, 3, 4],
+          [4, 1, 5, 5],
+          [1, 7, 5, 5],
+          [1, 2, 5, 6],
+          [1, 6, 6, 6],
+          [1, 7, 7, 7]]
+y_data = [[0, 0, 1],
+          [0, 0, 1],
+          [0, 0, 1],
+          [0, 1, 0],
+          [0, 1, 0],
+          [0, 1, 0],
+          [1, 0, 0],
+          [1, 0, 0]]
+
+print(x_data)
 
 
-a = 100
-b = 200
-c = 300
-d = 400
-e = 500
-f = 600
-g = 700
+X = tf.placeholder("float", [None, 4])
+Y = tf.placeholder("float", [None, 3])
+nb_classes = 3
 
-# stack_five = 5번 루프용, stack_start = 5번 넘게 루프하면 시작하게 하는 변수
-stack_five = 0
-stack_start = 0
-h = []
-i = 0
-# MySql 연결
-conn = pymysql.connect(host='localhost', user='root', password='autoset', db='test', charset='utf8')
+W = tf.Variable(tf.random_normal([4, nb_classes]), name='weight')
+b = tf.Variable(tf.random_normal([nb_classes]), name='bias')
 
-# Connection 으로부터 Cursor 생성
-curs = conn.cursor()
+# tf.nn.softmax computes softmax activations
+# softmax = exp(logits) / reduce_sum(exp(logits), dim)
+hypothesis = tf.nn.softmax(tf.matmul(X, W) + b)
 
-# 모르겠음
-user_agent = "'Mozilla/5.0"
-headers = {"User-Agent": user_agent}
+# Cross entropy cost/loss
+cost = tf.reduce_mean(-tf.reduce_sum(Y * tf.log(hypothesis), axis=1))
 
-sql = "select * from soccer"
-curs.execute(sql)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.1).minimize(cost)
 
-i = 0
-for row in curs:
-    i = i + 1
-print(i)
+# Launch graph
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+
+    for step in range(2001):
+        sess.run(optimizer, feed_dict={X: x_data, Y: y_data})
+        if step % 200 == 0:
+            print(step, sess.run(cost, feed_dict={X: x_data, Y: y_data}))
+
+    print('--------------')
+
+    # Testing & One-hot encoding
+    a = sess.run(hypothesis, feed_dict={X: [[1, 11, 7, 9]]})
+    print(a, sess.run(tf.argmax(a, 1)))
+
+    print('--------------')
+
+    b = sess.run(hypothesis, feed_dict={X: [[1, 3, 4, 3]]})
+    print(b, sess.run(tf.argmax(b, 1)))
+
+    print('--------------')
+
+    c = sess.run(hypothesis, feed_dict={X: [[1, 1, 0, 1]]})
+    print(c, sess.run(tf.argmax(c, 1)))
+
+    print('--------------')
+
+    all = sess.run(hypothesis, feed_dict={
+                   X: [[1, 11, 7, 9], [1, 3, 4, 3], [1, 1, 0, 1]]})
+    print(all, sess.run(tf.argmax(all, 1)))
